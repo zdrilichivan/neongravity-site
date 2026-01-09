@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termini di Servizio - Neon Gravity</title>
+    <meta name="description" content="Termini di Servizio per l'app Neon Gravity">
+    <meta name="theme-color" content="#00d4ff">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #050508;
+            color: #ffffff;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        /* Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at top, #0a0a15 0%, #050508 100%);
+            pointer-events: none;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
+        .glow-orb.pink {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 107, 157, 0.08);
+            top: 20%;
+            left: 5%;
+        }
+
+        /* Language switcher */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .lang-switch a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-switch a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #00d4ff;
+            text-decoration: none;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .last-updated {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9em;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: #00d4ff;
+            font-size: 1.4em;
+            margin-top: 40px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        ul {
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: #ff6b9d;
+        }
+
+        a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 30px 20px;
+            margin-top: 60px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animation">
+        <div class="glow-orb pink"></div>
+    </div>
+
+    <div class="lang-switch">
+        <a href="../en/terms.html">
+            <span>🇬🇧</span>
+            <span>English</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <a href="index.html" class="back-link">&larr; Torna alla Home</a>
+
+        <h1>Termini di Servizio</h1>
+        <p class="last-updated">Ultimo aggiornamento: Dicembre 2025</p>
+
+        <p>Benvenuto su Neon Gravity. Utilizzando la nostra applicazione, accetti di essere vincolato dai seguenti termini e condizioni.</p>
+
+        <h2>1. Accettazione dei Termini</h2>
+        <p>Scaricando, installando o utilizzando l'applicazione Neon Gravity, accetti di essere vincolato da questi Termini di Servizio. Se non accetti questi termini, non utilizzare l'applicazione.</p>
+
+        <h2>2. Licenza d'Uso</h2>
+        <p>Zdrilich Web Studios ti concede una licenza limitata, non esclusiva, non trasferibile e revocabile per utilizzare l'applicazione Neon Gravity per uso personale e non commerciale, in conformita con questi Termini.</p>
+
+        <h2>3. Restrizioni</h2>
+        <p>Non e consentito:</p>
+        <ul>
+            <li>Modificare, decompilare o effettuare reverse engineering dell'applicazione</li>
+            <li>Utilizzare l'applicazione per scopi illegali o non autorizzati</li>
+            <li>Tentare di aggirare le misure di sicurezza dell'applicazione</li>
+            <li>Utilizzare cheat, hack o software di terze parti per ottenere vantaggi nel gioco</li>
+            <li>Rivendere o redistribuire l'applicazione</li>
+        </ul>
+
+        <h2>4. Acquisti In-App</h2>
+        <p>L'applicazione offre acquisti in-app opzionali per sbloccare contenuti aggiuntivi. Tutti gli acquisti sono elaborati tramite Apple App Store e sono soggetti ai termini e condizioni di Apple.</p>
+        <p>Gli acquisti in-app sono:</p>
+        <ul>
+            <li><strong>Non rimborsabili</strong> - Una volta completato l'acquisto, non e possibile richiedere un rimborso diretto a noi. Eventuali richieste di rimborso devono essere indirizzate ad Apple.</li>
+            <li><strong>Non trasferibili</strong> - Gli acquisti sono legati al tuo account Apple ID.</li>
+        </ul>
+        <p>Per ripristinare gli acquisti effettuati, utilizza la funzione "Ripristina Acquisti" all'interno dell'applicazione.</p>
+
+        <h2>5. Valuta Virtuale</h2>
+        <p>Il gioco utilizza una valuta virtuale (monete) che puo essere guadagnata giocando o acquistata tramite acquisti in-app. La valuta virtuale:</p>
+        <ul>
+            <li>Non ha valore monetario reale</li>
+            <li>Non e scambiabile con denaro reale</li>
+            <li>Non e trasferibile tra account</li>
+            <li>Puo essere persa in caso di disinstallazione dell'app senza backup</li>
+        </ul>
+
+        <h2>6. Contenuti e Classifiche</h2>
+        <p>L'applicazione utilizza Apple Game Center per le classifiche e gli obiettivi. Utilizzando queste funzionalita, accetti anche i termini di servizio di Apple Game Center.</p>
+
+        <h2>7. Pubblicita</h2>
+        <p>L'applicazione contiene pubblicita fornite da servizi di terze parti (Google AdMob). Puoi rimuovere la pubblicita effettuando l'acquisto in-app "Rimuovi Pubblicita".</p>
+
+        <h2>8. Proprieta Intellettuale</h2>
+        <p>Tutti i contenuti dell'applicazione, inclusi ma non limitati a grafica, suoni, codice e design, sono di proprieta di Zdrilich Web Studios o dei suoi licenziatari e sono protetti dalle leggi sul copyright.</p>
+
+        <h2>9. Esclusione di Garanzia</h2>
+        <p>L'applicazione e fornita "cosi com'e" senza garanzie di alcun tipo, espresse o implicite. Non garantiamo che l'applicazione sara priva di errori o interruzioni.</p>
+
+        <h2>10. Limitazione di Responsabilita</h2>
+        <p>In nessun caso Zdrilich Web Studios sara responsabile per danni diretti, indiretti, incidentali, speciali o consequenziali derivanti dall'uso o dall'impossibilita di utilizzare l'applicazione.</p>
+
+        <h2>11. Modifiche ai Termini</h2>
+        <p>Ci riserviamo il diritto di modificare questi Termini di Servizio in qualsiasi momento. Le modifiche saranno effettive immediatamente dopo la pubblicazione dei termini aggiornati. L'uso continuato dell'applicazione dopo tali modifiche costituisce accettazione dei nuovi termini.</p>
+
+        <h2>12. Legge Applicabile</h2>
+        <p>Questi Termini sono regolati dalle leggi italiane. Qualsiasi controversia sara soggetta alla giurisdizione esclusiva dei tribunali italiani.</p>
+
+        <h2>13. Contatti</h2>
+        <p>Per domande riguardanti questi Termini di Servizio, contattaci a:</p>
+        <p><a href="mailto:info@zdrilichwebstudios.it">info@zdrilichwebstudios.it</a></p>
+    </div>
+
+    <footer>
+        <p class="footer-copyright">
+            &copy; 2025 Zdrilich Web Studios. Tutti i diritti riservati.
+        </p>
+    </footer>
+
+</body>
+</html>

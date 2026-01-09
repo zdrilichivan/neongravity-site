@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Gravity - Arcade Runner per iOS</title>
+    <meta name="description" content="Sfida la gravita in questo frenetico arcade runner! Schiva ostacoli, raccogli monete e sblocca navicelle uniche.">
+    <meta name="theme-color" content="#00d4ff">
+    <link rel="alternate" hreflang="it" href="../it/">
+    <link rel="alternate" hreflang="en" href="../en/">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #050508;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at top, #0a0a15 0%, #050508 100%);
+            pointer-events: none;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #00d4ff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #ff6b9d, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #00d4ff, transparent),
+                radial-gradient(1px 1px at 230px 80px, #ff6b9d, transparent),
+                radial-gradient(2px 2px at 300px 150px, #fff, transparent),
+                radial-gradient(1px 1px at 100px 200px, #00d4ff, transparent),
+                radial-gradient(2px 2px at 200px 250px, #ff6b9d, transparent),
+                radial-gradient(1px 1px at 50px 180px, #fff, transparent),
+                radial-gradient(2px 2px at 280px 50px, #00d4ff, transparent);
+            background-size: 350px 350px;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .glow-orb.cyan {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 212, 255, 0.1);
+            top: -10%;
+            left: 10%;
+        }
+
+        .glow-orb.pink {
+            width: 350px;
+            height: 350px;
+            background: rgba(255, 107, 157, 0.08);
+            bottom: 30%;
+            right: 5%;
+            animation-delay: -5s;
+        }
+
+        .glow-orb.purple {
+            width: 300px;
+            height: 300px;
+            background: rgba(157, 107, 255, 0.08);
+            top: 50%;
+            left: -5%;
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, -20px) scale(1.05); }
+            66% { transform: translate(-10px, 10px) scale(0.95); }
+        }
+
+        /* Language switcher */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .lang-switch a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-switch a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* Content wrapper */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+        }
+
+        .logo-container {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .logo-glow {
+            position: absolute;
+            inset: -15px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b9d);
+            border-radius: 38px;
+            filter: blur(25px);
+            opacity: 0.5;
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.08); }
+        }
+
+        .logo-placeholder {
+            width: 130px;
+            height: 130px;
+            background: linear-gradient(145deg, #1a1a2e 0%, #0f0f1a 100%);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-placeholder span {
+            font-size: 2.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            font-size: 3.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 50%, #00d4ff 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 4s ease infinite;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.25em;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        /* App Store Badge */
+        .download-section {
+            margin: 35px 0;
+        }
+
+        .app-store-badge {
+            height: 54px;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .app-store-badge:hover {
+            transform: scale(1.05) translateY(-2px);
+            filter: brightness(1.1) drop-shadow(0 8px 30px rgba(0, 212, 255, 0.3));
+        }
+
+        /* Description */
+        .description {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px 20px 50px;
+        }
+
+        .description p {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 1.15em;
+            line-height: 1.85;
+        }
+
+        .description strong {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            padding: 50px 20px;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 35px 28px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 18px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 157, 0.15));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+        }
+
+        .feature h3 {
+            color: #00d4ff;
+            margin-bottom: 12px;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+
+        .feature p {
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Screenshots */
+        .screenshots {
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .screenshots h2 {
+            font-size: 1.8em;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #ff6b9d, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .screenshot-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .screenshot-wrapper {
+            position: relative;
+        }
+
+        .screenshot {
+            width: 260px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .screenshot:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 212, 255, 0.15);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 50px 20px 30px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #00d4ff;
+        }
+
+        .footer-contact {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .footer-contact a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.85em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .subtitle { font-size: 1.1em; }
+            .features { padding: 30px 15px; }
+            .screenshot { width: 200px; }
+        }
+
+        @media (max-width: 500px) {
+            header { padding: 60px 15px 40px; }
+            h1 { font-size: 2.2em; }
+            .feature { padding: 25px 20px; }
+            .screenshot { width: 160px; border-radius: 16px; }
+            .footer-links { gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="stars"></div>
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb pink"></div>
+        <div class="glow-orb purple"></div>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="lang-switch">
+        <a href="../en/">
+            <span>🇬🇧</span>
+            <span>English</span>
+        </a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+        <header>
+            <div class="logo-container">
+                <div class="logo-glow"></div>
+                <div class="logo-placeholder">
+                    <span>NG</span>
+                </div>
+            </div>
+
+            <h1>Neon Gravity</h1>
+            <p class="subtitle">Sfida la gravita. Supera i tuoi limiti.</p>
+
+            <!-- App Store Badge -->
+            <div class="download-section">
+                <a href="#" id="appStoreLink">
+                    <img
+                        src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/it-it?size=250x83"
+                        alt="Scarica su App Store"
+                        class="app-store-badge"
+                    >
+                </a>
+            </div>
+        </header>
+
+        <!-- Description -->
+        <section class="description">
+            <p>
+                Immergiti in un universo <strong>cyberpunk</strong> dove i tuoi riflessi fanno la differenza.
+                Pilota la tua navicella attraverso scenari mozzafiato, schiva ostacoli impossibili e
+                raccogli monete per sbloccare <strong>6 navicelle uniche</strong>, ognuna con abilita speciali.
+                Quanto lontano riesci ad arrivare?
+            </p>
+        </section>
+
+        <!-- Features -->
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Azione Frenetica</h3>
+                <p>Riflessi pronti? Schiva ostacoli e sopravvivi il piu a lungo possibile!</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>6 Navicelle</h3>
+                <p>Sblocca navicelle uniche con abilita speciali: scudo, magnete, distruttore e altre!</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Stile Neon</h3>
+                <p>Grafica cyberpunk con 4 biomi diversi che cambiano durante il gioco.</p>
+            </div>
+        </section>
+
+        <!-- Screenshots -->
+        <section class="screenshots">
+            <h2>Screenshot</h2>
+            <div class="screenshot-gallery">
+                <div class="screenshot-wrapper">
+                    <img src="../screens/screen1.png" alt="Gameplay" class="screenshot">
+                </div>
+                <div class="screenshot-wrapper">
+                    <img src="../screens/screen2.png" alt="Negozio" class="screenshot">
+                </div>
+                <div class="screenshot-wrapper">
+                    <img src="../screens/screen3.png" alt="Power-ups" class="screenshot">
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Termini di Servizio</a>
+                    <a href="mailto:info@zdrilichwebstudios.it">Supporto</a>
+                </div>
+                <p class="footer-contact">
+                    Contatti: <a href="mailto:info@zdrilichwebstudios.it">info@zdrilichwebstudios.it</a>
+                </p>
+                <p class="footer-copyright">
+                    &copy; 2025 Zdrilich Web Studios. Tutti i diritti riservati.
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
