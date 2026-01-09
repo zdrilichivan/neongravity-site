@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Gravity - Arcade Runner Game</title>
+    <meta name="description" content="Defy gravity in this fast-paced arcade runner! Dodge obstacles, collect coins and unlock unique ships.">
+    <meta name="theme-color" content="#00d4ff">
+    <link rel="alternate" hreflang="it" href="it/">
+    <link rel="alternate" hreflang="en" href="en/">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #050508;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, #0a0a15 0%, #050508 100%);
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #00d4ff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #ff6b9d, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #00d4ff, transparent),
+                radial-gradient(1px 1px at 230px 80px, #ff6b9d, transparent),
+                radial-gradient(2px 2px at 300px 150px, #fff, transparent),
+                radial-gradient(1px 1px at 100px 200px, #00d4ff, transparent),
+                radial-gradient(2px 2px at 200px 250px, #ff6b9d, transparent);
+            background-size: 350px 350px;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .glow-orb.cyan {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 212, 255, 0.15);
+            top: 10%;
+            left: 10%;
+        }
+
+        .glow-orb.pink {
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 107, 157, 0.12);
+            bottom: 20%;
+            right: 15%;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        /* Content */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .logo-glow {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .logo-glow::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b9d);
+            border-radius: 35px;
+            filter: blur(20px);
+            opacity: 0.6;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        .logo-placeholder {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-placeholder span {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff 0%, #ff6b9d 50%, #00d4ff 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+
+        /* Language selector */
+        .language-title {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .language-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 35px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .lang-btn .flag {
+            font-size: 1.5em;
+        }
+
+        .lang-btn .lang-name {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .lang-btn .lang-native {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.8em;
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            h1 { font-size: 2.5em; }
+            .tagline { font-size: 1.1em; }
+            .lang-btn { padding: 15px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="stars"></div>
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb pink"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        <div class="logo-glow">
+            <div class="logo-placeholder">
+                <span>NG</span>
+            </div>
+        </div>
+
+        <h1>Neon Gravity</h1>
+        <p class="tagline">Defy gravity. Break your limits.</p>
+
+        <p class="language-title">Select Language</p>
+
+        <div class="language-buttons">
+            <a href="en/" class="lang-btn">
+                <span class="flag">🇬🇧</span>
+                <span class="lang-name">
+                    English
+                    <span class="lang-native">English</span>
+                </span>
+            </a>
+            <a href="it/" class="lang-btn">
+                <span class="flag">🇮🇹</span>
+                <span class="lang-name">
+                    Italian
+                    <span class="lang-native">Italiano</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Zdrilich Web Studios</p>
+    </footer>
+
+    <!-- Auto-redirect based on browser language -->
+    <script>
+        // Only redirect if this is the first visit (no language preference stored)
+        if (!sessionStorage.getItem('langSelected')) {
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.startsWith('it')) {
+                window.location.href = 'it/';
+            } else {
+                window.location.href = 'en/';
+            }
+        }
+        // Mark that user has seen the language selector
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                sessionStorage.setItem('langSelected', 'true');
+            });
+        });
+    </script>
+
+</body>
+</html>
